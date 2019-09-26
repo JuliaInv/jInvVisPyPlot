@@ -18,7 +18,7 @@ function plotModel
 	limits			:: Maximum and minimum values in the colorbar.
 	filename        :: A filename for automatically saving the image as a file.
 """
-function plotModel(m::Union{Array{Float64},Array{Float32}},includeMeshInfo::Bool=false,M_regular = [],cutPad::Int64 = 0,limits = [],filename="")
+function plotModel(m::Union{Array{Float64},Array{Float32}};includeMeshInfo::Bool=false,M_regular = [],cutPad::Int64 = 0,limits = [],filename="",figTitle="")
 
 if limits!=[]
 	vmin = limits[1];
@@ -35,6 +35,9 @@ end
 	if length(size(m))==2
 		T = m';
 		imshow(T, clim = limits,cmap = "jet"); colorbar();
+		if figTitle != ""
+			title(figTitle)
+		end
 		if includeMeshInfo
 			Omega = M_regular.domain;
 			tics = 0:2:floor(Int64,Omega[2])
@@ -59,7 +62,7 @@ end
 #			subplot(string("44",k))
 			subplot(4,4,k)
 			pic = reshape(v[:,lin[k],:],size(m,1),size(m,3))';
-			imshow(pic,clim = limits); title(string("frame",lin[k]));colorbar()
+			imshow(pic,clim = limits); title(string(figTitle,": frame",lin[k]));colorbar()
 		end
 		if filename != ""
 			savefig(string(filename[1:end-4],".png"));
